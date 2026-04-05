@@ -12,7 +12,7 @@ export default function DashboardScreen() {
       </View>
 
       <View style={styles.statsGrid}>
-        <StatCard title="Total Revenue" value="$45,231" icon={DollarSign} color="#10B981" />
+        <StatCard title="Total Revenue" value="₹45,231" icon={DollarSign} color="#10B981" />
         <StatCard title="Active Projects" value="24" icon={Briefcase} color="#3B82F6" />
         <StatCard title="Pending Invoices" value="7" icon={Clock} color="#F59E0B" />
         <StatCard title="Completed Renewals" value="18" icon={CheckCircle} color="#8B5CF6" />

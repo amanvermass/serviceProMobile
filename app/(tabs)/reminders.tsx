@@ -17,7 +17,7 @@ const REMINDERS = [
   {
     id: '2',
     title: 'Payment Received',
-    message: 'Wellness Hub has paid $500 for Hosting services.',
+    message: 'Wellness Hub has paid ₹500 for Hosting services.',
     date: 'Apr 1, 2026',
     type: 'Info',
     icon: Bell,

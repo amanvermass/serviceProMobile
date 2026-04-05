@@ -1,6 +1,6 @@
-import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
+import { router } from 'expo-router';
 import StatusBadge from './StatusBadge';
 
 export interface BillingItem {
@@ -17,20 +17,24 @@ interface BillingCardProps {
 }
 
 export default function BillingCard({ item }: BillingCardProps) {
+  const handlePress = () => {
+    router.push(`/billing/${item.id}`);
+  };
+
   return (
-    <View style={styles.card}>
+    <Pressable style={styles.card} onPress={handlePress}>
       <View style={styles.header}>
         <View>
           <Text style={styles.id}>#{item.id}</Text>
           <Text style={styles.company}>{item.company}</Text>
         </View>
-        <Pressable style={styles.viewButton}>
+        <View style={styles.viewButton}>
           <Text style={styles.viewText}>View</Text>
           <ChevronRight size={14} color="#6B7280" />
-        </Pressable>
+        </View>
       </View>
 
-      <Text style={styles.clientLabel}>CLIENT: <Text style={styles.clientValue}>{item.client}</Text></Text>
+      <Text style={styles.clientLabel}>CLIENT: <Text style={styles.clientName}>{item.client}</Text></Text>
 
       <View style={styles.separator} />
 
@@ -39,7 +43,7 @@ export default function BillingCard({ item }: BillingCardProps) {
         <DetailSection title="HOSTING" data={item.hosting} />
         <DetailSection title="MAINTENANCE" data={item.maintenance} />
       </View>
-    </View>
+    </Pressable>
   );
 }
 
@@ -108,7 +112,7 @@ const styles = StyleSheet.create({
     color: '#6B7280',
     marginBottom: 12,
   },
-  clientValue: {
+  clientName: {
     color: '#111827',
     fontWeight: '600',
   },

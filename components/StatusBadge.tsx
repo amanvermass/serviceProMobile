@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-export type StatusType = 'Paid' | 'Unpaid' | 'Not Raised' | 'Partial Payment' | 'Full Payment';
+export type StatusType = string; // Accept any status string
 
 interface StatusBadgeProps {
   type: StatusType;
@@ -9,10 +9,17 @@ interface StatusBadgeProps {
 }
 
 export default function StatusBadge({ type, label }: StatusBadgeProps) {
-  let color = '#6B7280'; // Gray
-  let bgColor = '#F3F4F6';
+  let color = '#6B7280'; // Default gray
+  let bgColor = '#F3F4F6'; // Light gray background
 
-  if (type === 'Paid') {
+  // Specific mappings for known statuses
+  if (type === 'active') {
+    color = '#10B981'; // Green
+    bgColor = '#ECFDF5';
+  } else if (type === 'inactive') {
+    color = '#9CA3AF'; // Gray
+    bgColor = '#F9FAFB';
+  } else if (type === 'Paid') {
     color = '#10B981'; // Green
     bgColor = '#ECFDF5';
   } else if (type === 'Unpaid') {

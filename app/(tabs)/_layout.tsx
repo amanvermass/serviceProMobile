@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
-import { LayoutDashboard, ReceiptText, Bell, Settings } from 'lucide-react-native';
+import { LayoutDashboard, ReceiptText, CalendarSync, Bell, Settings } from 'lucide-react-native';
 
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
@@ -33,10 +33,21 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="renewals"
+        options={{
+          title: 'Renewals',
+          tabBarIcon: ({ color, size }) => <CalendarSync color={color} size={size} />,
+          tabBarBadge: '',
+          tabBarBadgeStyle: { backgroundColor: '#EF4444', minWidth: 8, height: 8, borderRadius: 4, marginTop: 4 },
+        }}
+      />
+      <Tabs.Screen
         name="reminders"
         options={{
           title: 'Reminders',
           tabBarIcon: ({ color, size }) => <Bell color={color} size={size} />,
+          tabBarBadge: '',
+          tabBarBadgeStyle: { backgroundColor: '#EF4444', minWidth: 8, height: 8, borderRadius: 4, marginTop: 4 },
         }}
       />
       <Tabs.Screen
