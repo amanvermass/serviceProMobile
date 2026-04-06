@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, ScrollView, Pressable } from 'react-native';
+import { StyleSheet, ScrollView, Pressable, View } from 'react-native';
 import { useLocalSearchParams, Stack, router } from 'expo-router';
 import { 
   ChevronLeft, 
@@ -13,7 +13,7 @@ import {
   HardDrive,
   Mail
 } from 'lucide-react-native';
-import { Text, View } from '@/components/Themed';
+import { Text } from '@/components/Themed';
 import StatusBadge from '@/components/StatusBadge';
 
 const RENEWALS_DATA = [

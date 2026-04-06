@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, ScrollView, Pressable, Linking } from 'react-native';
+import { StyleSheet, ScrollView, Pressable, Linking, View } from 'react-native';
 import { useLocalSearchParams, Stack, router } from 'expo-router';
 import { 
   ChevronLeft, 
@@ -12,7 +12,7 @@ import {
   Settings, 
   History 
 } from 'lucide-react-native';
-import { Text, View } from '@/components/Themed';
+import { Text } from '@/components/Themed';
 import StatusBadge from '@/components/StatusBadge';
 
 const MOCK_DATA = {
