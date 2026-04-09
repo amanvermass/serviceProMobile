@@ -1,8 +1,8 @@
-import React from 'react';
-import { StyleSheet, FlatList, Pressable } from 'react-native';
-import { Bell, Calendar, Mail, AlertTriangle } from 'lucide-react-native';
-import { Text, View } from '@/components/Themed';
 import StatusBadge from '@/components/StatusBadge';
+import { Text, View } from '@/components/Themed';
+import { AlertTriangle, Bell, Calendar, Mail } from 'lucide-react-native';
+import React from 'react';
+import { FlatList, Pressable, StyleSheet } from 'react-native';
 
 const REMINDERS = [
   {

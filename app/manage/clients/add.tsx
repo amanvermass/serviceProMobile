@@ -216,11 +216,15 @@ export default function ClientFormScreen() {
               style={styles.dropdownButton}
               onPress={() => setIsCategoryModalOpen(true)}
             >
-              <Text style={[styles.dropdownButtonText, !formData.category && { color: '#9CA3AF' }]}>
-                {formData.category && categories.length > 0 
-                  ? (categories.find(c => (c._id || c.id) === formData.category)?.name || 'Select Category') 
-                  : 'Select Category'}
-              </Text>
+              {fetchingCategories && !formData.category ? (
+                <View style={styles.inlineShimmer} />
+              ) : (
+                <Text style={[styles.dropdownButtonText, !formData.category && { color: '#9CA3AF' }]}>
+                  {formData.category && categories.length > 0 
+                    ? (categories.find(c => (c._id || c.id) === formData.category)?.name || 'Select Category') 
+                    : 'Select Category'}
+                </Text>
+              )}
               <ChevronDown size={20} color="#6B7280" />
             </Pressable>
           </View>
@@ -469,6 +473,12 @@ const styles = StyleSheet.create({
   dropdownButtonText: {
     fontSize: 15,
     color: '#111827',
+  },
+  inlineShimmer: {
+    width: 140,
+    height: 14,
+    backgroundColor: '#E5E7EB',
+    borderRadius: 6,
   },
   modalOverlay: {
     flex: 1,

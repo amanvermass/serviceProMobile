@@ -238,3 +238,32 @@ export const hostingApi = {
   },
 };
 
+/**
+ * Maintenance Management API Methods
+ */
+export const maintenanceApi = {
+  getMaintenances: (params: { page?: number; limit?: number; search?: string; status?: string; sortBy?: string; order?: string }) => {
+    const query = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+      if (value) query.append(key, String(value));
+    });
+    return apiFetch(`/api/maintenance?${query.toString()}`);
+  },
+  getMaintenanceById: (id: string) => {
+    return apiFetch(`/api/maintenance/${id}`);
+  },
+  saveMaintenance: (id: string | null, payload: any) => {
+    return apiFetch(`/api/maintenance${id ? `/${id}` : ''}`, {
+      method: id ? 'PUT' : 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
+  deleteMaintenance: (id: string) => {
+    return apiFetch(`/api/maintenance/${id}`, {
+      method: 'DELETE',
+    });
+  },
+  getStats: () => {
+    return apiFetch('/api/maintenance/maintenance-stats');
+  },
+};

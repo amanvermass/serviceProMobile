@@ -1,30 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  StyleSheet, 
-  ScrollView, 
-  Pressable, 
-  TextInput, 
-  ActivityIndicator, 
-  Switch, 
-  Modal,
-  Platform
-} from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { useLocalSearchParams, Stack, router } from 'expo-router';
-import { 
-  ChevronLeft, 
-  Save, 
-  Globe, 
-  CreditCard,
-  Building,
-  ChevronDown,
-  Check,
-  Briefcase,
-  Calendar
-} from 'lucide-react-native';
-import Animated, { FadeInUp, FadeOutDown } from 'react-native-reanimated';
+import ClientShimmer from '@/components/ClientShimmer';
 import { Text, View } from '@/components/Themed';
-import { domainApi, clientApi, vendorApi } from '@/lib/api';
+import { clientApi, domainApi, vendorApi } from '@/lib/api';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { Stack, router, useLocalSearchParams } from 'expo-router';
+import {
+  Briefcase,
+  Building,
+  Calendar,
+  Check,
+  ChevronDown,
+  ChevronLeft,
+  CreditCard,
+  Globe,
+  Save
+} from 'lucide-react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  ActivityIndicator,
+  Modal,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  TextInput
+} from 'react-native';
+import Animated, { FadeInUp, FadeOutDown } from 'react-native-reanimated';
 
 export default function DomainFormScreen() {
   const { id, payload } = useLocalSearchParams();
@@ -37,6 +38,7 @@ export default function DomainFormScreen() {
   // Dropdown data
   const [clients, setClients] = useState<any[]>([]);
   const [vendors, setVendors] = useState<any[]>([]);
+  const [selectLoading, setSelectLoading] = useState(true);
   
   // Modals for styling dropdown on iOS/Android
   const [isClientModalOpen, setIsClientModalOpen] = useState(false);
@@ -52,11 +54,14 @@ export default function DomainFormScreen() {
     cost: '',
     purchasedBy: 'kvtmedia',
     autoRenew: false,
+    status: 'active',
   });
+  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchSelectData = async () => {
       try {
+        setSelectLoading(true);
         const [clientsRes, vendorsRes] = await Promise.all([
           clientApi.getClients({ limit: 100 }),
           vendorApi.getProviders()
@@ -65,6 +70,8 @@ export default function DomainFormScreen() {
         setVendors(Array.isArray(vendorsRes) ? vendorsRes : (vendorsRes.data || []));
       } catch (error) {
         console.error('Error fetching dropdown data:', error);
+      } finally {
+        setSelectLoading(false);
       }
     };
     fetchSelectData();
@@ -81,7 +88,16 @@ export default function DomainFormScreen() {
       cost: domain.cost ? String(domain.cost) : '',
       purchasedBy: domain.purchasedBy || 'kvtmedia',
       autoRenew: domain.autoRenew || false,
+      status: domain.status || 'active',
     });
+  };
+
+  const titleCase = (val: string) => {
+    return String(val || '')
+      .replace(/-/g, ' ')
+      .split(' ')
+      .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(' ');
   };
 
   useEffect(() => {
@@ -126,7 +142,7 @@ export default function DomainFormScreen() {
         cost: parseFloat(formData.cost) || 0,
         purchasedBy: formData.purchasedBy,
         autoRenew: formData.autoRenew,
-        status: 'active',
+        status: isEditing ? formData.status : 'active',
       };
 
       await domainApi.saveDomain(id as string || null, payload);
@@ -228,9 +244,13 @@ export default function DomainFormScreen() {
             >
               <View style={styles.dropdownContent}>
                 <Building size={18} color="#9CA3AF" style={styles.inputIcon} />
-                <Text style={formData.clientId ? styles.dropdownText : styles.dropdownPlaceholder}>
-                  {getClientName(formData.clientId)}
-                </Text>
+                {selectLoading && !formData.clientId ? (
+                  <View style={styles.inlineShimmer} />
+                ) : (
+                  <Text style={formData.clientId ? styles.dropdownText : styles.dropdownPlaceholder}>
+                    {getClientName(formData.clientId)}
+                  </Text>
+                )}
               </View>
               <ChevronDown size={18} color="#9CA3AF" />
             </Pressable>
@@ -244,9 +264,13 @@ export default function DomainFormScreen() {
             >
               <View style={styles.dropdownContent}>
                 <Briefcase size={18} color="#9CA3AF" style={styles.inputIcon} />
-                <Text style={formData.vendorId ? styles.dropdownText : styles.dropdownPlaceholder}>
-                  {getVendorName(formData.vendorId)}
-                </Text>
+                {selectLoading && !formData.vendorId ? (
+                  <View style={styles.inlineShimmer} />
+                ) : (
+                  <Text style={formData.vendorId ? styles.dropdownText : styles.dropdownPlaceholder}>
+                    {getVendorName(formData.vendorId)}
+                  </Text>
+                )}
               </View>
               <ChevronDown size={18} color="#9CA3AF" />
             </Pressable>
@@ -345,6 +369,26 @@ export default function DomainFormScreen() {
           </View>
         </View>
 
+        {isEditing && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Status</Text>
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Domain Status</Text>
+              <Pressable 
+                style={styles.dropdownButton}
+                onPress={() => setIsStatusModalOpen(true)}
+              >
+                <View style={styles.dropdownContent}>
+                  <Text style={formData.status ? styles.dropdownText : styles.dropdownPlaceholder}>
+                    {titleCase(formData.status)}
+                  </Text>
+                </View>
+                <ChevronDown size={18} color="#9CA3AF" />
+              </Pressable>
+            </View>
+          </View>
+        )}
+
         <Pressable 
           style={[styles.submitButton, loading && styles.submitButtonDisabled]} 
           onPress={handleSave}
@@ -364,24 +408,31 @@ export default function DomainFormScreen() {
           <Pressable style={styles.modalContent} onPress={e => e.stopPropagation()}>
             <Text style={styles.modalTitle}>Select Client</Text>
             <ScrollView style={styles.modalScroll}>
-              {clients.map((client) => (
-                <Pressable
-                  key={client._id || client.id}
-                  style={styles.modalOption}
-                  onPress={() => {
-                    setFormData(prev => ({ ...prev, clientId: client._id || client.id }));
-                    setIsClientModalOpen(false);
-                  }}
-                >
-                  <Text style={[
-                     styles.modalOptionText,
-                     formData.clientId === (client._id || client.id) && { color: '#4F46E5', fontWeight: 'bold' }
-                  ]}>
-                    {client.company || client.companyName || client.name}
-                  </Text>
-                  {formData.clientId === (client._id || client.id) && <Check size={20} color="#4F46E5" />}
-                </Pressable>
-              ))}
+              {selectLoading ? (
+                <View style={{ padding: 16 }}>
+                  <ClientShimmer />
+                  <ClientShimmer />
+                </View>
+              ) : (
+                clients.map((client) => (
+                  <Pressable
+                    key={client._id || client.id}
+                    style={styles.modalOption}
+                    onPress={() => {
+                      setFormData(prev => ({ ...prev, clientId: client._id || client.id }));
+                      setIsClientModalOpen(false);
+                    }}
+                  >
+                    <Text style={[
+                       styles.modalOptionText,
+                       formData.clientId === (client._id || client.id) && { color: '#4F46E5', fontWeight: 'bold' }
+                    ]}>
+                      {client.company || client.companyName || client.name}
+                    </Text>
+                    {formData.clientId === (client._id || client.id) && <Check size={20} color="#4F46E5" />}
+                  </Pressable>
+                ))
+              )}
             </ScrollView>
           </Pressable>
         </Pressable>
@@ -393,24 +444,31 @@ export default function DomainFormScreen() {
           <Pressable style={styles.modalContent} onPress={e => e.stopPropagation()}>
             <Text style={styles.modalTitle}>Select Vendor</Text>
             <ScrollView style={styles.modalScroll}>
-              {vendors.map((vendor) => (
-                <Pressable
-                  key={vendor._id || vendor.id}
-                  style={styles.modalOption}
-                  onPress={() => {
-                    setFormData(prev => ({ ...prev, vendorId: vendor._id || vendor.id }));
-                    setIsVendorModalOpen(false);
-                  }}
-                >
-                  <Text style={[
-                     styles.modalOptionText,
-                     formData.vendorId === (vendor._id || vendor.id) && { color: '#4F46E5', fontWeight: 'bold' }
-                  ]}>
-                    {vendor.name}
-                  </Text>
-                  {formData.vendorId === (vendor._id || vendor.id) && <Check size={20} color="#4F46E5" />}
-                </Pressable>
-              ))}
+              {selectLoading ? (
+                <View style={{ padding: 16 }}>
+                  <ClientShimmer />
+                  <ClientShimmer />
+                </View>
+              ) : (
+                vendors.map((vendor) => (
+                  <Pressable
+                    key={vendor._id || vendor.id}
+                    style={styles.modalOption}
+                    onPress={() => {
+                      setFormData(prev => ({ ...prev, vendorId: vendor._id || vendor.id }));
+                      setIsVendorModalOpen(false);
+                    }}
+                  >
+                    <Text style={[
+                       styles.modalOptionText,
+                       formData.vendorId === (vendor._id || vendor.id) && { color: '#4F46E5', fontWeight: 'bold' }
+                    ]}>
+                      {vendor.name}
+                    </Text>
+                    {formData.vendorId === (vendor._id || vendor.id) && <Check size={20} color="#4F46E5" />}
+                  </Pressable>
+                ))
+              )}
             </ScrollView>
           </Pressable>
         </Pressable>
@@ -425,6 +483,35 @@ export default function DomainFormScreen() {
           onChange={onChangeDate}
         />
       )}
+
+      {/* Status Dropdown Modal */}
+      <Modal visible={isStatusModalOpen} animationType="slide" transparent>
+        <Pressable style={styles.modalOverlay} onPress={() => setIsStatusModalOpen(false)}>
+          <Pressable style={styles.modalContent} onPress={e => e.stopPropagation()}>
+            <Text style={styles.modalTitle}>Select Status</Text>
+            <ScrollView style={styles.modalScroll}>
+              {['active', 'pending', 'inactive'].map((s) => (
+                <Pressable
+                  key={s}
+                  style={styles.modalOption}
+                  onPress={() => {
+                    setFormData(prev => ({ ...prev, status: s }));
+                    setIsStatusModalOpen(false);
+                  }}
+                >
+                  <Text style={[
+                    styles.modalOptionText,
+                    formData.status === s && { color: '#4F46E5', fontWeight: 'bold' }
+                  ]}>
+                    {titleCase(s)}
+                  </Text>
+                  {formData.status === s && <Check size={20} color="#4F46E5" />}
+                </Pressable>
+              ))}
+            </ScrollView>
+          </Pressable>
+        </Pressable>
+      </Modal>
 
       {/* Custom Toast */}
       {!!toastMessage && (
@@ -540,6 +627,12 @@ const styles = StyleSheet.create({
   dropdownPlaceholder: {
     fontSize: 15,
     color: '#9CA3AF',
+  },
+  inlineShimmer: {
+    width: 140,
+    height: 14,
+    backgroundColor: '#E5E7EB',
+    borderRadius: 6,
   },
   tabsContainer: {
     flexDirection: 'row',

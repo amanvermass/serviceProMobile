@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { StyleSheet, FlatList, TextInput, Pressable, ScrollView } from 'react-native';
-import { Search, Filter, Download } from 'lucide-react-native';
-import { Text, View } from '@/components/Themed';
 import BillingCard, { BillingItem } from '@/components/BillingCard';
+import { Text, View } from '@/components/Themed';
+import { Stack, router } from 'expo-router';
+import { ChevronLeft, Download, Filter, Search } from 'lucide-react-native';
+import React, { useState } from 'react';
+import { FlatList, Pressable, StyleSheet, TextInput } from 'react-native';
 
 const MOCK_DATA: BillingItem[] = [
   {
@@ -44,33 +45,39 @@ export default function BillingScreen() {
 
   return (
     <View style={styles.container}>
+      <Stack.Screen 
+        options={{ 
+          title: 'Billing',
+          headerLeft: () => (
+            <Pressable onPress={() => router.back()} style={{ padding: 8, marginLeft: -8 }}>
+              <ChevronLeft size={24} color="#111827" />
+            </Pressable>
+          ),
+        }} 
+      />
+
       <View style={styles.headerSection}>
-        <Text style={styles.title}>Project Billing</Text>
-        <Text style={styles.subtitle}>
-          Unified financial tracking for domain registrations, hosting services, and maintenance agreements.
-        </Text>
-        
-        <Pressable style={styles.exportButton}>
-          <Download size={18} color="#FFF" />
-          <Text style={styles.exportText}>Export Report</Text>
-        </Pressable>
+        <View style={styles.searchRow}>
+          <View style={styles.searchContainer}>
+            <Search size={18} color="#9CA3AF" style={styles.searchIcon} />
+            <TextInput
+              placeholder="Search by project, client, or ID..."
+              style={styles.searchInput}
+              value={search}
+              onChangeText={setSearch}
+              placeholderTextColor="#9CA3AF"
+            />
+          </View>
+          <Pressable style={styles.filterButton}>
+            <Filter size={18} color="#6B7280" />
+          </Pressable>
+          <Pressable style={styles.exportButton}>
+            <Download size={18} color="#FFF" />
+            <Text style={styles.exportText}>Export</Text>
+          </Pressable>
+        </View>
       </View>
 
-      <View style={styles.filterSection}>
-        <View style={styles.searchContainer}>
-          <Search size={18} color="#9CA3AF" style={styles.searchIcon} />
-          <TextInput
-            placeholder="Search by project title, client, or ID..."
-            style={styles.searchInput}
-            value={search}
-            onChangeText={setSearch}
-          />
-        </View>
-        <Pressable style={styles.filterButton}>
-          <Filter size={18} color="#6B7280" />
-          <Text style={styles.filterText}>Filter</Text>
-        </Pressable>
-      </View>
 
       <FlatList
         data={MOCK_DATA}
@@ -89,80 +96,60 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9FAFB',
   },
   headerSection: {
-    padding: 20,
-    backgroundColor: '#FFF',
+    padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#F3F4F6',
+    backgroundColor: '#FFF',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#111827',
-    marginBottom: 4,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: '#6B7280',
-    lineHeight: 20,
-    marginBottom: 16,
+  searchRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   exportButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#111827',
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    alignSelf: 'flex-start',
+    gap: 6,
+    paddingHorizontal: 12,
+    height: 44,
+    borderRadius: 10,
+    backgroundColor: '#4F46E5',
   },
   exportText: {
     color: '#FFF',
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '600',
-    marginLeft: 8,
-  },
-  filterSection: {
-    flexDirection: 'row',
-    padding: 16,
-    gap: 12,
   },
   searchContainer: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFF',
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    borderRadius: 8,
+    backgroundColor: '#F3F4F6',
+    borderRadius: 10,
     paddingHorizontal: 12,
     height: 44,
+    gap: 8,
   },
   searchIcon: {
     marginRight: 8,
   },
   searchInput: {
     flex: 1,
-    fontSize: 14,
+    fontSize: 15,
     color: '#111827',
   },
   filterButton: {
-    flexDirection: 'row',
+    width: 44,
+    height: 44,
+    borderRadius: 10,
+    backgroundColor: '#EEF2FF',
     alignItems: 'center',
-    backgroundColor: '#FFF',
+    justifyContent: 'center',
     borderWidth: 1,
     borderColor: '#E5E7EB',
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    height: 44,
-  },
-  filterText: {
-    color: '#374151',
-    fontWeight: '500',
-    marginLeft: 8,
   },
   listContent: {
     padding: 16,
-    paddingTop: 0,
+    paddingBottom: 40,
   },
 });

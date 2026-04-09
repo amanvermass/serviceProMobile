@@ -1,9 +1,9 @@
-import React from 'react';
-import { StyleSheet, ScrollView, Pressable, Switch } from 'react-native';
-import { User, Bell, Shield, CircleHelp, LogOut, ChevronRight, Briefcase, Users, Server, Globe } from 'lucide-react-native';
-import { router } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import { useAuth } from '@/context/AuthContext';
+import { router } from 'expo-router';
+import { Bell, Briefcase, ChevronRight, CircleHelp, LogOut, Shield, User, Users } from 'lucide-react-native';
+import React from 'react';
+import { Pressable, ScrollView, StyleSheet, Switch } from 'react-native';
 
 export default function SettingsScreen() {
   const [notifications, setNotifications] = React.useState(true);
@@ -34,41 +34,41 @@ export default function SettingsScreen() {
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Business Management</Text>
-        <SettingItem 
-          icon={Users} 
-          title="Clients" 
-          color="#3B82F6" 
+        <SettingItem
+          icon={Users}
+          title="Clients"
+          color="#3B82F6"
           onPress={() => router.push('/manage/clients')}
         />
-          <SettingItem 
+        {/* <SettingItem 
             icon={Globe} 
             title="Domains " 
             color="#F59E0B" 
             onPress={() => router.push('/manage/domains')}
-          />
-        <SettingItem 
-          icon={Briefcase} 
-          title="Vendors" 
-          color="#8B5CF6" 
+          /> */}
+        <SettingItem
+          icon={Briefcase}
+          title="Vendors"
+          color="#8B5CF6"
           onPress={() => router.push('/manage/vendors')}
         />
-        <SettingItem 
+        {/* <SettingItem 
           icon={Server} 
           title="Hosting" 
           color="#10B981" 
           onPress={() => router.push('/manage/hosting')}
-        />
+        /> */}
       </View>
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Support & Legal</Text>
         <SettingItem icon={CircleHelp} title="Help Center" />
         <SettingItem icon={Shield} title="Terms of Service" />
-        <SettingItem 
-          icon={LogOut} 
-          title="Sign Out" 
-          color="#EF4444" 
-          showChevron={false} 
+        <SettingItem
+          icon={LogOut}
+          title="Sign Out"
+          color="#EF4444"
+          showChevron={false}
           onPress={signOut}
         />
       </View>
@@ -80,11 +80,11 @@ export default function SettingsScreen() {
 
 function SettingItem({ icon: Icon, title, right, color = '#111827', showChevron = true, onPress }: any) {
   return (
-    <Pressable 
+    <Pressable
       style={({ pressed }) => [
         styles.settingItem,
         pressed && onPress && { backgroundColor: '#F3F4F6' }
-      ]} 
+      ]}
       onPress={onPress}
       disabled={!onPress && !right}
     >

@@ -1,7 +1,7 @@
-import React from 'react';
-import { StyleSheet, ScrollView, Pressable } from 'react-native';
-import { DollarSign, Briefcase, Clock, CheckCircle } from 'lucide-react-native';
 import { Text, View } from '@/components/Themed';
+import { Briefcase, CheckCircle, Clock, DollarSign } from 'lucide-react-native';
+import React from 'react';
+import { ScrollView, StyleSheet } from 'react-native';
 
 export default function DashboardScreen() {
   return (
@@ -23,7 +23,7 @@ export default function DashboardScreen() {
           <Text style={styles.sectionTitle}>Upcoming Renewals</Text>
           <Text style={styles.viewAll}>View All</Text>
         </View>
-        
+
         <RenewalItem company="TechCorp Solutions" service="Domain" days={3} status="Urgent" />
         <RenewalItem company="Wellness Hub" service="Hosting" days={5} status="Normal" />
         <RenewalItem company="Digital Innovations" service="Maintenance" days={12} status="Normal" />

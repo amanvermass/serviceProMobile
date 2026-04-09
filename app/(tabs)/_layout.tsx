@@ -1,9 +1,9 @@
-import React from 'react';
 import { Tabs } from 'expo-router';
-import { LayoutDashboard, ReceiptText, CalendarSync, Bell, Settings } from 'lucide-react-native';
+import { Bell, CalendarSync, LayoutDashboard, ReceiptText, Settings } from 'lucide-react-native';
+import React from 'react';
 
-import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
+import Colors from '@/constants/Colors';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
