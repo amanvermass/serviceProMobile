@@ -55,11 +55,6 @@ export default function BillingDetailScreen() {
         options={{
           headerShown: true,
           headerTitle: `Project #${project.id}`,
-          headerLeft: () => (
-            <Pressable onPress={() => router.back()} style={styles.backButton}>
-              <ChevronLeft size={24} color="#111827" />
-            </Pressable>
-          ),
         }} 
       />
 

@@ -13,26 +13,25 @@ export default function StatusBadge({ type, label }: StatusBadgeProps) {
   let bgColor = '#F3F4F6'; // Light gray background
 
   // Specific mappings for known statuses
-  if (type === 'active') {
-    color = '#10B981'; // Green
+  const statusKey = type.toLowerCase().replace(/\s/g, '');
+
+  if (statusKey === 'active' || statusKey === 'available') {
+    color = '#059669'; // Emerald-600
     bgColor = '#ECFDF5';
-  } else if (type === 'inactive') {
-    color = '#9CA3AF'; // Gray
-    bgColor = '#F9FAFB';
-  } else if (type === 'Paid') {
-    color = '#10B981'; // Green
-    bgColor = '#ECFDF5';
-  } else if (type === 'Unpaid') {
-    color = '#F59E0B'; // Orange
+  } else if (statusKey === 'inactive' || statusKey === 'nonfunctional') {
+    color = '#E11D48'; // Rose-600
+    bgColor = '#FFF1F2';
+  } else if (statusKey === 'paid') {
+    color = '#10B981'; // Green-500
+    bgColor = '#F0FDF4';
+  } else if (statusKey === 'unpaid' || statusKey === 'repairing') {
+    color = '#D97706'; // Amber-600
     bgColor = '#FFFBEB';
-  } else if (type === 'Not Raised') {
-    color = '#9CA3AF'; // Light gray
-    bgColor = '#F9FAFB';
-  } else if (type === 'Full Payment') {
-    color = '#3B82F6'; // Blue
-    bgColor = '#EFF6FF';
-  } else if (type === 'Partial Payment') {
-    color = '#8B5CF6'; // Purple
+  } else if (statusKey === 'lent' || statusKey === 'fullpayment') {
+    color = '#4F46E5'; // Indigo-600
+    bgColor = '#EEF2FF';
+  } else if (statusKey === 'partialpayment' || statusKey === 'pending') {
+    color = '#8B5CF6'; // Purple-600
     bgColor = '#F5F3FF';
   }
 

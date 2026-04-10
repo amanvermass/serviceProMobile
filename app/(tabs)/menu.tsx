@@ -8,18 +8,12 @@ export default function CentralMenuScreen() {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <View style={styles.hero}>
-          <Text style={styles.heroTitle}>Quick Modules</Text>
-          <Text style={styles.heroSubtitle}>
-            Access core tools like Billing, Assets, PMS, Backup, and CRM from one place.
-          </Text>
-        </View>
 
         <View style={styles.grid}>
           <MenuCard
             icon={<Boxes size={24} color="#4F46E5" />}
             label="Assets"
-            onPress={() => { }}
+            onPress={() => router.push('/manage/assets')}
           />
           <MenuCard
             icon={<CreditCard size={24} color="#4F46E5" />}
@@ -29,7 +23,7 @@ export default function CentralMenuScreen() {
           <MenuCard
             icon={<ClipboardList size={24} color="#4F46E5" />}
             label="PMS"
-            onPress={() => { }}
+            onPress={() => router.push('/manage/pms')}
           />
           <MenuCard
             icon={<Cloud size={24} color="#4F46E5" />}

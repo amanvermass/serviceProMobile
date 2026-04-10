@@ -4,6 +4,7 @@ import { Stack, router } from 'expo-router';
 import { ChevronLeft, Download, Filter, Search } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { FlatList, Pressable, StyleSheet, TextInput } from 'react-native';
+import Animated, { FadeInUp } from 'react-native-reanimated';
 
 const MOCK_DATA: BillingItem[] = [
   {
@@ -48,11 +49,6 @@ export default function BillingScreen() {
       <Stack.Screen 
         options={{ 
           title: 'Billing',
-          headerLeft: () => (
-            <Pressable onPress={() => router.back()} style={{ padding: 8, marginLeft: -8 }}>
-              <ChevronLeft size={24} color="#111827" />
-            </Pressable>
-          ),
         }} 
       />
 
@@ -82,7 +78,11 @@ export default function BillingScreen() {
       <FlatList
         data={MOCK_DATA}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <BillingCard item={item} />}
+        renderItem={({ item, index }) => (
+          <Animated.View entering={FadeInUp.delay(index * 100)}>
+            <BillingCard item={item} />
+          </Animated.View>
+        )}
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
       />

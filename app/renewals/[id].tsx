@@ -41,11 +41,6 @@ export default function RenewalDetailScreen() {
         options={{
           headerShown: true,
           headerTitle: 'Renewal Details',
-          headerLeft: () => (
-            <Pressable onPress={() => router.back()} style={styles.backButton}>
-              <ChevronLeft size={24} color="#111827" />
-            </Pressable>
-          ),
         }} 
       />
 
